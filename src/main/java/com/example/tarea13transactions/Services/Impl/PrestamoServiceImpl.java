@@ -67,7 +67,6 @@ public class PrestamoServiceImpl implements PrestamoService {
 
         return prestamoGuardado;
     }
-
     @Override
     public List<Prestamo> findAll(){
         return prestamoRepository.findAll();
@@ -111,7 +110,7 @@ public class PrestamoServiceImpl implements PrestamoService {
     }
 
     @Override
-   public Prestamo actualizarEstado(Long id, String estado) {
+    public Prestamo actualizarEstado(Long id, String estado) {
         Prestamo prestamo = prestamoRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Préstamo no encontrado"));
 
@@ -140,6 +139,7 @@ public class PrestamoServiceImpl implements PrestamoService {
             throw new RuntimeException("Estado no válido: " + estado);
         }
     }
+
     @Override
     public void deleteById(Long id) {
         Prestamo prestamo = prestamoRepository.findById(id)
