@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Préstamos</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        .form-container, .list-container {
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input, select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 8px 12px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-right: 5px;
+            margin-top: 5px;
+        }
+        button:hover {
+            opacity: 0.8;
+        }
+        button.delete {
+            background-color: #f44336;
+        }
+        button.edit {
+            background-color: #2196F3;
+        }
+        button.return {
+            background-color: #ff9800;
+        }
+        #resultado {
+            margin-top: 20px;
+            padding: 10px;
+            border-radius: 4px;
+        }
+        .success {
+            background-color: #dff0d8;
+            color: #3c763d;
+        }
+        .error {
+            background-color: #f2dede;
+            color: #a94442;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        .action-buttons {
+            display: flex;
+            gap: 5px;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.4);
+        }
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 50%;
+            border-radius: 5px;
+        }
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+<div class="form-container">
+    <h2>Registro de Préstamos</h2>
+
+    <div class="form-group">
+        <label for="usuarioId">ID de Usuario:</label>
+        <input type="number" id="usuarioId" required>
+    </div>
+
+    <div class="form-group">
+        <label for="libroId">ID de Libro:</label>
+        <input type="number" id="libroId" required>
+    </div>
+
+    <button onclick="realizarPrestamo()">Realizar Préstamo</button>
+
+    <div id="resultado"></div>
+</div>
+
+<div class="list-container">
+    <h2>Préstamos Registrados</h2>
+    <button onclick="cargarPrestamos()">Actualizar Lista</button>
+    <div id="lista-prestamos">
+        <table id="tabla-prestamos">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Libro</th>
+                <th>Usuario</th>
+                <th>Fecha Préstamo</th>
+                <th>Estado</th>
+                <th>Acciones</th>
+            </tr>
+            </thead>
+            <tbody id="cuerpo-tabla">
+            <!-- Los préstamos se cargarán aquí -->
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Modal para editar préstamo -->
+<div id="modal-editar" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="cerrarModal()">&times;</span>
+        <h2>Editar Préstamo</h2>
+        <input type="hidden" id="edit-prestamo-id">
+
+        <div class="form-group">
+            <label for="edit-estado">Estado:</label>
+            <select id="edit-estado">
+                <option value="ACTIVO">Activo</option>
+                <option value="COMPLETADO">Completado</option>
+                <option value="VENCIDO">Vencido</option>
+            </select>
+        </div>
+
+        <button onclick="guardarCambios()">Guardar Cambios</button>
+    </div>
+</div>
+
+<script src="prestamo.js"></script>
+</body>
+</html>
