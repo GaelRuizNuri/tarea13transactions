@@ -45,6 +45,9 @@ public class PrestamoServiceImpl implements PrestamoService {
         // 2. Verificar usuario existe
         Usuario usuario = usuarioService.findById(usuarioId)
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+        if (!usuario.getActivo()) {
+            throw new RuntimeException("El usuario " + usuario.getNombre() + " está penalizado.");
+        }
 
         // 3. Actualizar estado del libro
         libro.setDisponible(false);
@@ -64,6 +67,7 @@ public class PrestamoServiceImpl implements PrestamoService {
 
         return prestamoGuardado;
     }
+
     @Override
     public List<Prestamo> findAll(){
         return prestamoRepository.findAll();
@@ -107,7 +111,7 @@ public class PrestamoServiceImpl implements PrestamoService {
     }
 
     @Override
-    public Prestamo actualizarEstado(Long id, String estado) {
+   public Prestamo actualizarEstado(Long id, String estado) {
         Prestamo prestamo = prestamoRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Préstamo no encontrado"));
 
@@ -115,15 +119,27 @@ public class PrestamoServiceImpl implements PrestamoService {
             Prestamo.EstadoPrestamo nuevoEstado = Prestamo.EstadoPrestamo.valueOf(estado);
             prestamo.setEstado(nuevoEstado);
             Libro libro = prestamo.getLibro();
-            if(prestamo.getEstado()==Prestamo.EstadoPrestamo.VENCIDO || prestamo.getEstado()==Prestamo.EstadoPrestamo.ACTIVO) libro.setDisponible(false);
-            else libro.setDisponible(true);
+            if(prestamo.getEstado()==Prestamo.EstadoPrestamo.VENCIDO){
+                libro.setDisponible(false);
+                Usuario usuario = prestamo.getUsuario();
+                usuario.setActivo(false);
+                usuarioService.save(usuario);
+            }
+            else if (prestamo.getEstado()==Prestamo.EstadoPrestamo.ACTIVO) {
+                libro.setDisponible(false);
+
+            } else {
+                libro.setDisponible(true);
+                Usuario usuario = prestamo.getUsuario();
+                usuario.setActivo(true);
+                usuarioService.save(usuario);
+            }
             libroService.save(libro);
             return prestamoRepository.save(prestamo);
         } catch (IllegalArgumentException e) {
             throw new RuntimeException("Estado no válido: " + estado);
         }
     }
-
     @Override
     public void deleteById(Long id) {
         Prestamo prestamo = prestamoRepository.findById(id)
