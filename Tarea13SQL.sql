@@ -63,8 +63,3 @@ INSERT INTO libros (titulo, autor, isbn, categoria_id, disponible, fecha_publica
 ('Clean Code', 'Robert C. Martin', '9780132350884', 3, TRUE, '2008-08-01'),
 ('Historia del arte', 'Ernst Gombrich', '9780714832470', 5, TRUE, '1950-01-01'),
 ('Cien años de soledad', 'Gabriel García Márquez', '9780307474728', 1, TRUE, '1967-05-30');
-
--- Índices para mejorar el rendimiento
-CREATE INDEX idx_libros_categoria ON libros(categoria_id);
-CREATE INDEX idx_prestamos_usuario ON prestamos(usuario_id);
-CREATE INDEX idx_prestamos_libro ON prestamos(libro_id);
