@@ -106,6 +106,12 @@ public class PrestamoServiceImpl implements PrestamoService {
         libro.setDisponible(true);
         libroService.save(libro);
 
+        //Actualizar estado del usuario
+        Usuario usuario = prestamo.getUsuario();
+        usuario.setActivo(true);
+        usuarioService.save(usuario);
+
+        
         return prestamoRepository.save(prestamo);
     }
 
